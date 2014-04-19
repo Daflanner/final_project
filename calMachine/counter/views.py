@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from counter.forms import UserForm, UserProfileForm
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect, HttpResponse
 
 
 """ index page view info. """
@@ -47,3 +49,33 @@ def register(request):
 		'counter/register.html',
 		{'user_form': user_form, 'profile_form':profile_form, 'registered':registered},
 		context)
+
+
+""" login veiw code"""
+
+def user_login(request):
+	context = RequestContext(request)
+
+	if request.method == 'POST':
+
+		username = request.POST['username']
+		password = request.POST['password']
+
+		user = authenticate(username = username, password = password )
+
+		if user is not None:
+            # Is the account active? It could have been disabled.
+			if user.is_active:
+               
+				login(request, user)
+				return HttpResponseRedirect('/counter/')
+			else:
+				return HttpResponse("Your Hit The Mark account is disabled.")
+
+		else:
+			print "Invalid login details: {0}, {1}".format(username, password)
+			return HttpResponse("Invalid login details supplied.")
+	else:
+		return render_to_response('counter/login.html', {}, context)
+
+
