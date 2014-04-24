@@ -99,7 +99,7 @@ def Day_Record(request):
 			record.save()
 
 
-			return HttpResponseRedirect('/counter')
+			return HttpResponseRedirect('/counter/MealEntry')
 
 		else: 
 			print form.errors
@@ -112,6 +112,36 @@ def Day_Record(request):
 
 
 """ Meal type page """
+from counter.forms import MealType
+from django.contrib.auth.decorators import login_required
+@login_required
+
+
+def MealEntry(request):
+	context = RequestContext(request)
+    
+	if request.method == 'POST':
+		form = MealType(request.POST)
+
+		if form.is_valid():
+			
+			record = form.save(commit=False)
+			record = request.user.RecordedDays
+			record.save()
+
+
+			return HttpResponseRedirect('/counter')
+
+		else: 
+			print form.errors
+
+	else:
+
+		form = RecordedDays()
+
+	return render_to_response('counter/MealEntry.html', {'form':form}, context)
+
+"""  Ingredient Page """
 
 
 

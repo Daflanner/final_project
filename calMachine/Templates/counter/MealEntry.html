@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>counter</title>
+    </head>
+
+    <body>
+        <h1>Which Meal or Snack Are You Recording ?</h1>
+
+        <form action="/counter/Day_Record/" method="post">
+
+            {% csrf_token %}
+            
+            {{form.as_p}}
+
+
+
+<p><input type="submit" value="Submit" /></p>
+
+</form>
+
+        
+    </body>
+
+</html>
