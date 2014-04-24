@@ -28,15 +28,16 @@ def register(request):
 			user = user_form.save()
 
 			user.set_password(user.password)
-			user.save()
+			
 
 			profile = profile_form.save(commit=False)
 			profile.user = user
 
-			if 'picture' in request. Files:
-				profile.picture = request.Files['picture']
+			#if 'picture' in request.Files:
+			#	profile.picture = request.Files['picture']
 
 			profile.save()
+			user.save()
 
 			registered = True
 		else:	
@@ -68,7 +69,7 @@ def user_login(request):
 			if user.is_active:
                
 				login(request, user)
-				return HttpResponseRedirect('/counter/')
+				return HttpResponseRedirect('/counter/Day_Record/')
 			else:
 				return HttpResponse("Your Hit The Mark account is disabled.")
 
@@ -77,5 +78,43 @@ def user_login(request):
 			return HttpResponse("Invalid login details supplied.")
 	else:
 		return render_to_response('counter/login.html', {}, context)
+
+
+""" Recorded days Page"""
+
+from counter.forms import RecordedDays
+from django.contrib.auth.decorators import login_required
+@login_required
+
+def Day_Record(request):
+	context = RequestContext(request)
+
+	if request.method == 'POST':
+		form = RecordedDays(request.POST)
+
+		if form.is_valid():
+			
+			record = form.save(commit=False)
+			record = request.user.userprofile
+			record.save()
+
+
+			return HttpResponseRedirect('/counter')
+
+		else: 
+			print form.errors
+
+	else:
+
+		form = RecordedDays()
+
+	return render_to_response('counter/Day_Record.html', {'form':form}, context)
+
+
+""" Meal type page """
+
+
+
+
 
 

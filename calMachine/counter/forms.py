@@ -1,4 +1,4 @@
-from counter.models import UserProfile
+from counter.models import UserProfile, RecordedDays, MealType, Ingredient
 
 from django.contrib.auth.models import User
 from django import forms
@@ -14,3 +14,20 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('Calorie_Goal', 'picture')
+
+class RecordedDays(forms.ModelForm):
+	
+	class Meta:
+		model = RecordedDays
+		fields = ('Date',)
+
+class MealType (forms.ModelForm):
+	
+	class Meta:
+		model = MealType
+
+
+class Ingredient (forms.ModelForm):
+	Ingredient = forms.CharField(max_length= 40, help_text ="Please enter the ingredients of the meal quantity for each ingredient, (ex. 2 for 2 slices of bread) and the calories for one unit of that item ")
+	Calories = forms.IntegerField(initial = 0)
+	Amount = forms.IntegerField(initial = 0)

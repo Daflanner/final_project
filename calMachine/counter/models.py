@@ -18,7 +18,7 @@ class UserProfile(models.Model):
 # Create your models here.
 class RecordedDays(models.Model):
     profile = models.ForeignKey(UserProfile, unique = False)
-    dayrecorded =models.DateField(auto_now=False, auto_now_add =False) 
+    Date =models.DateField(auto_now=False, auto_now_add =False) 
 
     def __unicode__(self):
         pass
@@ -34,7 +34,16 @@ class RecordedDays(models.Model):
 
 class MealType (models.Model):
     recordedDay = models.ForeignKey(RecordedDays, unique =False)
-    mealNum = models.CharField(max_length= 40, unique = False)
+    mealNum_CHOICES = (
+        ('BF','Breakfast'),
+        ('LN', 'Lunch'),
+        ('DN', 'Dinner')
+        )
+    mealNum = models.CharField(max_length = 2, 
+                                choices = mealNum_CHOICES,
+                                default = 'BF',help_text ="Please enter what kind of meal you would like to record")
+
+
 
     def __unicode__(self):
         return self.user.username
