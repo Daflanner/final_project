@@ -11,7 +11,7 @@
         <h3>  {{user.username}}       </h3>
         {% endif %}
 
-        <form action="/counter/MealEntry/" method="post">
+        <form action="/counter/{{recorddate}}/" method="post">
         	<a href="/counter/logout/">Logout</a>
 
             {% csrf_token %}

@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from datetime import date
+from .models import RecordedDays
 
 
 """ index page view info. """
@@ -98,7 +99,7 @@ def user_logout(request):
 
 """ Recorded days Page"""
 
-from counter.forms import RecordedDays
+from counter.forms import RecordedDaysFRM
 from django.contrib.auth.decorators import login_required
 @login_required
 
@@ -106,18 +107,19 @@ def Day_Record(request):
 	context = RequestContext(request)
 
 	if request.method == 'POST':
-		form = RecordedDays(request.POST)
+		form = RecordedDaysFRM(request.POST)
 
 		if form.is_valid():
 			try: 
-				record = RecordedDays.objects.get(userprofile= request.user.userprofile, Date = form.date)
+				record = RecordedDays.objects.get(
+					userprofile= request.user.userprofile, Date = form.date)
 			except:
 				
 				record = form.save(commit=False)
 				record.profile = request.user.userprofile
 				record.save()
 
-
+				#puts yr, month, day intot URL w/ form submission
 			return HttpResponseRedirect('/counter/' + str(record.Date) +'/')
 
 
@@ -126,7 +128,7 @@ def Day_Record(request):
 
 	else:
 
-		form = RecordedDays()
+		form = RecordedDaysFRM()
 
 	return render_to_response('counter/Day_Record.html', {'form':form}, context)
 
@@ -138,47 +140,61 @@ from django.contrib.auth.decorators import login_required
 
 
 def MealEntry(request,year, month, day):
+	#url.py calls mealEntry view with yr month and Day extracted  from recordeddate URL
+
+
 	context = RequestContext(request)
+	context["recorddate"] = "%s-%s-%s" % (year,month,day)
     
 	if request.method == 'POST':
+		#request is a post, process submited form 
+		#instantiate form w/ post data 
 		form = MealType(request.POST)
 
 		if form.is_valid():
+			#all form fields are valid, process data 
 			
-			record = form.save(commit=False)
-			record.Date = datetime
-			record.save()
+			#creates meal object from drop down field. 
+			meal = form.save(commit=False) #but, does not save yet!
+			#add recorded date to meal
+			# get mthod searching RecordedDays class filtering via user profile and date ::: pulls current user profile from the request
+			# using date from datetime function to compare against the Date object  from the recordedDays class. 
+			
+			print "count = ", RecordedDays.objects.count()
+			meal.recordedDay = RecordedDays.objects.get(profile= request.user.userprofile, 
+				Date = date( int(year), int(month), int(day)  ) )
+			  
+			#Now that the recordeDays has been attatched to meal. The meal record is saved.
+			meal.save()
 
 
-			return HttpResponseRedirect('/counter/Component')
+			return HttpResponseRedirect('/counter/%s-%s-%s/%s/' %(year,month,day,meal.mealNum))
 
 		else: 
 			print form.errors
 
 	else:
-
+		 
 		form = MealType()
 
 	return render_to_response('counter/MealEntry.html', {'form':form}, context)
 
 """  Ingredient Page """
 
-from counter.forms import Ingredient
+from counter.forms import IngredientFRM
 from django.contrib.auth.decorators import login_required
 @login_required
 
 
-def Component(request):
+def Component(request,year, month, day,mealtp):
 	context = RequestContext(request)
     
 	if request.method == 'POST':
-		form = Ingredient(request.POST)
+		form = IngredientFRM(request.POST)
 
 		if form.is_valid():
 			
-			record = form.save(commit=False)
-			record = request.RecordedDays
-			record.save()
+			
 
 
 			return HttpResponseRedirect('/counter/Component')
@@ -188,7 +204,7 @@ def Component(request):
 
 	else:
 
-		form = Ingredient()
+		form = IngredientFRM()
 
 	return render_to_response('counter/Ingredients.html', {'form':form}, context)
 

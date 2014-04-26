@@ -15,7 +15,7 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ('Calorie_Goal', 'picture')
 
-class RecordedDays(forms.ModelForm):
+class RecordedDaysFRM(forms.ModelForm):
 	
 	class Meta:
 		model = RecordedDays
@@ -27,7 +27,7 @@ class MealType (forms.ModelForm):
 		model = MealType
 		fields = ('mealNum',)
 
-class Ingredient (forms.ModelForm):
+class IngredientFRM (forms.ModelForm):
 
 	class Meta:
 		model = Ingredient

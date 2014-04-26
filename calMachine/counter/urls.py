@@ -8,8 +8,13 @@ urlpatterns = patterns('',
 	url(r'^logout/$', views.user_logout, name='logout'),
 	url(r'^Day_Record/$', views.Day_Record,  name='Day_Record'),
 	#url(r'^MealEntry/$', views.MealEntry,  name='MealEntry')
-	url(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})/$', views.MealEntry, name = 'MealEntry'  ), 
-	url(r'^Component/$', views.Component, name = 'Component'  ), 
-	#url(r'^restricted/', views.restricted, name='restricted'),         
+	url(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})/$', 
+		views.MealEntry, name = 'MealEntry'  ), 
+	url(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})/(?P<mealtp>[A-Z]{2})/$', 
+		views.Component, name = 'Component'), 
+	#url(r'^restricted/', views.restricted, name='restricted'),    
+
+	#url(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})/(?P<mealtp>)/$', 
+		#views.Component, name = 'Component'),      
 
 )

@@ -25,7 +25,7 @@ class RecordedDays(models.Model):
         return self.profile.user.username
 
     def DayTotal(self):
-        mlist = MealType.object.filter(redordedDay = self)
+        mlist = MealType.objects.filter(redordedDay = self)
         DyTotal = 0
         for ml in mlist:
             DyTotal += ml.mlTotal
@@ -47,10 +47,10 @@ class MealType (models.Model):
 
 
     def __unicode__(self):
-        return self.user.username
+        return str(self.recordedDay) + self.get_mealNum_display()
     
     def Mealtotal(self):
-        ilist = Ingredient.object.filter(numMeal=self)
+        ilist = Ingredient.objects.filter(numMeal=self)
         mlTotal = 0 
         for ing in ilist: 
             # summation of ingredient totals
@@ -67,8 +67,8 @@ class Ingredient (models.Model):
 
 
     def __unicode__(self):
-        return self.user.username
+        return str(self.numMeal) + self.component
 
-    def total(self):
+    def comp_total(self):
         total = Quantity *Calories/component
-        return total
+        return comp_total
