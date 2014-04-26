@@ -4,11 +4,18 @@ from django.shortcuts import render_to_response
 from counter.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from datetime import date
 
 
 """ index page view info. """
+
 def index(request):
 	context =RequestContext(request)
+
+
+
 
 	context_dict = {'boldmessage': " "}
 	return render_to_response('counter/index.html', context_dict, context)
@@ -50,7 +57,7 @@ def register(request):
 		'counter/register.html',
 		{'user_form': user_form, 'profile_form':profile_form, 'registered':registered},
 		context)
-
+ 
 
 """ login veiw code"""
 
@@ -79,6 +86,15 @@ def user_login(request):
 	else:
 		return render_to_response('counter/login.html', {}, context)
 
+@login_required
+def user_logout(request):
+    # Since we know the user is logged in, we can now just log them out.
+    logout(request)
+    
+    # Take the user back to the homepage.
+    return HttpResponseRedirect('/counter/')
+
+
 
 """ Recorded days Page"""
 
@@ -93,13 +109,17 @@ def Day_Record(request):
 		form = RecordedDays(request.POST)
 
 		if form.is_valid():
-			
-			record = form.save(commit=False)
-			record = request.user.userprofile
-			record.save()
+			try: 
+				record = RecordedDays.objects.get(userprofile= request.user.userprofile, Date = form.date)
+			except:
+				
+				record = form.save(commit=False)
+				record.profile = request.user.userprofile
+				record.save()
 
 
-			return HttpResponseRedirect('/counter/MealEntry')
+			return HttpResponseRedirect('/counter/' + str(record.Date) +'/')
+
 
 		else: 
 			print form.errors
@@ -117,7 +137,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 
 
-def MealEntry(request):
+def MealEntry(request,year, month, day):
 	context = RequestContext(request)
     
 	if request.method == 'POST':
@@ -126,23 +146,51 @@ def MealEntry(request):
 		if form.is_valid():
 			
 			record = form.save(commit=False)
-			record = request.user.RecordedDays
+			record.Date = datetime
 			record.save()
 
 
-			return HttpResponseRedirect('/counter')
+			return HttpResponseRedirect('/counter/Component')
 
 		else: 
 			print form.errors
 
 	else:
 
-		form = RecordedDays()
+		form = MealType()
 
 	return render_to_response('counter/MealEntry.html', {'form':form}, context)
 
 """  Ingredient Page """
 
+from counter.forms import Ingredient
+from django.contrib.auth.decorators import login_required
+@login_required
+
+
+def Component(request):
+	context = RequestContext(request)
+    
+	if request.method == 'POST':
+		form = Ingredient(request.POST)
+
+		if form.is_valid():
+			
+			record = form.save(commit=False)
+			record = request.RecordedDays
+			record.save()
+
+
+			return HttpResponseRedirect('/counter/Component')
+
+		else: 
+			print form.errors
+
+	else:
+
+		form = Ingredient()
+
+	return render_to_response('counter/Ingredients.html', {'form':form}, context)
 
 
 

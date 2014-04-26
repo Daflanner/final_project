@@ -34,13 +34,14 @@ class RecordedDays(models.Model):
 
 class MealType (models.Model):
     recordedDay = models.ForeignKey(RecordedDays, unique =False)
-    mealNum_CHOICES = (
-        ('BF','Breakfast'),
+    mealTP_CHOICES= (
+       ('BF','Breakfast'),
         ('LN', 'Lunch'),
-        ('DN', 'Dinner')
-        )
+        ('DN', 'Dinner'),
+        ('SN', 'Snack'))
+        
     mealNum = models.CharField(max_length = 2, 
-                                choices = mealNum_CHOICES,
+                                choices = mealTP_CHOICES,
                                 default = 'BF',help_text ="Please enter what kind of meal you would like to record")
 
 
@@ -60,13 +61,14 @@ class MealType (models.Model):
 
 class Ingredient (models.Model):
     numMeal = models.ForeignKey(MealType, unique = False)
-    ingred = models.CharField(max_length = 40, unique = False)
-    ingredNum = models.IntegerField()
-    ingCal = models.IntegerField()
-	
+    component = models.CharField(max_length = 40, unique = False)
+    components_calories = models.IntegerField()
+    quantity= models.IntegerField()
+
+
     def __unicode__(self):
         return self.user.username
 
     def total(self):
-        total = ingredNum * ingCal
+        total = Quantity *Calories/component
         return total

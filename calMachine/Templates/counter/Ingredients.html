@@ -5,14 +5,19 @@
     </head>
 
     <body>
-        <h1>Which Meal or Snack Are You Recording ?</h1>
+        <h1>Ingredients Page</h1>
+
+        <p> Please Enter each component of your meal; the calories for one unit of that, component and how many units of that component you ate. Example:  Wheat bread 120 calories 1 slice.
 
         {% if user.is_authenticated %}
         <h3>  {{user.username}}       </h3>
         {% endif %}
 
-        <form action="/counter/MealEntry/" method="post">
-        	<a href="/counter/logout/">Logout</a>
+        <form action="/counter/ingredient/" method="post">
+        	
+
+
+            <a href="/counter/logout/">Logout</a>
 
             {% csrf_token %}
             

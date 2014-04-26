@@ -7,16 +7,32 @@
 
     <body>
         <h1>Welcome To Hit The Mark!!</h1>
-        The Calorie Counter That Rocks !! <strong>{{ boldmessage }}</strong><br />
+        The Calorie Counter That Rocks !!
+
+
+        {% if user.is_authenticated %}
+        
+        <h3>  {{user.username}}       </h3>
+        <a href="/counter/logout/">Logout</a>
+        <a href="/counter/Day_Record/ ">  Enter a date</a> 
+        
+
+         <strong>{{ boldmessage }}</strong><br />
         <a href="/counter/about/">About</a><br />
 
+
+
+                     
+
+
+            {% else %}
         <p>  If you're ready to start....  </p>
         <a href="/counter/register/">Register Here</a> 
 
         <p> If you already have an account go ahead and login </p>
         <a href="/counter/login/">Login</a>
 
-
+            {% endif %}
     </body>
  
 </html>
