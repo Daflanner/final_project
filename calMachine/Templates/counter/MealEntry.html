@@ -11,12 +11,14 @@
         <h3>  {{user.username}}       </h3>
         {% endif %}
 
+
+            {# method posts mealtype with the recorded date extracted from created URL tol match to url stored in Urls file.  #}
         <form action="/counter/{{recorddate}}/" method="post">
         	<a href="/counter/logout/">Logout</a>
 
             {% csrf_token %}
             
-            {{form.as_p}}
+            XXX{{form.as_p}}XXX
 
 
 

@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from datetime import date
-from .models import RecordedDays
+from .models import RecordedDays,MealType,Ingredient
 
 
 """ index page view info. """
@@ -134,7 +134,7 @@ def Day_Record(request):
 
 
 """ Meal type page """
-from counter.forms import MealType
+from counter.forms import MealTypeFRM
 from django.contrib.auth.decorators import login_required
 @login_required
 
@@ -144,12 +144,12 @@ def MealEntry(request,year, month, day):
 
 
 	context = RequestContext(request)
-	context["recorddate"] = "%s-%s-%s" % (year,month,day)
+	context["recorddate"] = "%s-%s-%s" % (year,month, day)
     
 	if request.method == 'POST':
 		#request is a post, process submited form 
 		#instantiate form w/ post data 
-		form = MealType(request.POST)
+		form = MealTypeFRM(request.POST)
 
 		if form.is_valid():
 			#all form fields are valid, process data 
@@ -175,7 +175,7 @@ def MealEntry(request,year, month, day):
 
 	else:
 		 
-		form = MealType()
+		form = MealTypeFRM()
 
 	return render_to_response('counter/MealEntry.html', {'form':form}, context)
 
@@ -188,16 +188,27 @@ from django.contrib.auth.decorators import login_required
 
 def Component(request,year, month, day,mealtp):
 	context = RequestContext(request)
-    
+	mealTP_dict= {
+       'BF':'Breakfast',
+       'LN': 'Lunch',
+       'DN': 'Dinner',
+       'SN': 'Snack'}
+	context['mealText'] = mealTP_dict[mealtp]
+	context['mealDate'] = '%s-%s-%s' %(year,day,month)
+	context[ 'MealType'] = mealtp
+
+	context[ 'comp_list'] = Ingredient.objects.filter(numMeal__recordedDay__profile= request.user.userprofile, numMeal__recordedDay__Date= date( int(year),  int(month), int(day)   ),numMeal__mealNum=mealtp )			
+			
 	if request.method == 'POST':
 		form = IngredientFRM(request.POST)
 
 		if form.is_valid():
 			
-			
+			Component =  form.save(commit=False)   
+			Component.numMeal = MealType.objects.get(recordedDay__profile= request.user.userprofile, recordedDay__Date= date( int(year),  int(month), int(day),   ),mealNum=mealtp )			
+			Component.save()
 
-
-			return HttpResponseRedirect('/counter/Component')
+			return HttpResponseRedirect('/counter/%s-%s-%s/%s/' %(year,month,day,mealtp))
 
 		else: 
 			print form.errors

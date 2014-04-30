@@ -10,10 +10,16 @@
         <p> Please Enter each component of your meal; the calories for one unit of that, component and how many units of that component you ate. Example:  Wheat bread 120 calories 1 slice.
 
         {% if user.is_authenticated %}
-        <h3>  {{user.username}}       </h3>
+        <h3>  {{user.username}}  {{mealDate}} {{mealText}}    </h3>
+
+        {% for comp in comp_list   %}
+        <p>  {{comp.component}}  {{comp.comp_total}}</p>
+        
+        {% endfor%}
+
         {% endif %}
 
-        <form action="/counter/ingredient/" method="post">
+        <form action="/counter/{{mealDate}}/{{MealType}}/" method="post">
         	
 
 

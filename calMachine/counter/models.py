@@ -70,5 +70,5 @@ class Ingredient (models.Model):
         return str(self.numMeal) + self.component
 
     def comp_total(self):
-        total = Quantity *Calories/component
-        return comp_total
+        total = self.quantity *self.components_calories
+        return total

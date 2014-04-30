@@ -21,7 +21,7 @@ class RecordedDaysFRM(forms.ModelForm):
 		model = RecordedDays
 		fields = ('Date',)
 
-class MealType (forms.ModelForm):
+class MealTypeFRM (forms.ModelForm):
 	
 	class Meta:
 		model = MealType
@@ -29,9 +29,15 @@ class MealType (forms.ModelForm):
 
 class IngredientFRM (forms.ModelForm):
 
+	#model = Ingredient
+	#component = forms.CharField(max_length= 40, help_text ="Please enter the ingredients of the meal quantity for each ingredient, (ex. 2 for 2 slices of bread) and the calories for one unit of that item ")
+	#Calories = forms.IntegerField(initial = 0)
+	#Amount = forms.IntegerField(initial = 0)
+	#comp_total= forms.IntegerField(initial = 0)
+
+
 	class Meta:
 		model = Ingredient
-		component = forms.CharField(max_length= 40, help_text ="Please enter the ingredients of the meal quantity for each ingredient, (ex. 2 for 2 slices of bread) and the calories for one unit of that item ")
-		Calories = forms.IntegerField(initial = 0)
-		Amount = forms.IntegerField(initial = 0)
-		comp_total= forms.IntegerField(initial = 0)
+		fields = (  'component', 
+			'quantity','components_calories' )
+		
