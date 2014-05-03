@@ -33,7 +33,7 @@ class RecordedDays(models.Model):
 
 
 class MealType (models.Model):
-    recordedDay = models.ForeignKey(RecordedDays, unique =False)
+    newDay = models.ForeignKey(RecordedDays, unique =False)
     mealTP_CHOICES= (
        ('BF','Breakfast'),
         ('LN', 'Lunch'),
@@ -47,14 +47,14 @@ class MealType (models.Model):
 
 
     def __unicode__(self):
-        return str(self.recordedDay) + self.get_mealNum_display()
+        return str(self.newDay) + self.get_mealNum_display()
     
     def Mealtotal(self):
         ilist = Ingredient.objects.filter(numMeal=self)
         mlTotal = 0 
         for ing in ilist: 
             # summation of ingredient totals
-            mlTotal += ing.total()
+            mlTotal += ing.comp_total()
         return mlTotal
 
 

@@ -112,14 +112,18 @@ def Day_Record(request):
 		if form.is_valid():
 			try: 
 				record = RecordedDays.objects.get(
-					userprofile= request.user.userprofile, Date = form.date)
-			except:
+					profile= request.user.userprofile, 
+					Date = form.cleaned_data['Date'])
+			
+			except Exception as Datefail:		#creates meal object from drop down field. 
+				print type( Datefail)
+				print Datefail.args
 				
 				record = form.save(commit=False)
 				record.profile = request.user.userprofile
 				record.save()
 
-				#puts yr, month, day intot URL w/ form submission
+				#puts yr, month, day into URL w/ form submission
 			return HttpResponseRedirect('/counter/' + str(record.Date) +'/')
 
 
@@ -152,21 +156,34 @@ def MealEntry(request,year, month, day):
 		form = MealTypeFRM(request.POST)
 
 		if form.is_valid():
-			#all form fields are valid, process data 
+			#if all form fields are valid, process data 
+
+			try:
+				
+				meal = MealType.objects.get(newDay__profile= request.user.userprofile,
+				#Date = form.cleaned_data['Date'],
+				mealNum =form.cleaned_data['mealNum'])
+				#Date = form.cleaned_data['Date'],
+
+				print "try fully run" 
+
+			except Exception as mealfail:		#creates meal object from drop down field. 
+				print type( mealfail)
+				print mealfail.args
+				
+				meal = form.save(commit=False) #but, does not save yet!
 			
-			#creates meal object from drop down field. 
-			meal = form.save(commit=False) #but, does not save yet!
-			#add recorded date to meal
-			# get mthod searching RecordedDays class filtering via user profile and date ::: pulls current user profile from the request
+						# get method searching RecordedDays class filtering via user profile and date ::: pulls current user profile from the request
 			# using date from datetime function to compare against the Date object  from the recordedDays class. 
-			
-			print "count = ", RecordedDays.objects.count()
-			meal.recordedDay = RecordedDays.objects.get(profile= request.user.userprofile, 
+				meal.newDay = RecordedDays.objects.get(profile= request.user.userprofile, 
+					#Date = form.cleaned_data['Date'],
+				#mealtype =form.cleaned_data['mealtype'],
 				Date = date( int(year), int(month), int(day)  ) )
 			  
-			#Now that the recordeDays has been attatched to meal. The meal record is saved.
-			meal.save()
+			#Now that the recordedDays has been attatched to meal. The meal record is saved.
+				meal.save()
 
+			print "except completed"	
 
 			return HttpResponseRedirect('/counter/%s-%s-%s/%s/' %(year,month,day,meal.mealNum))
 
@@ -194,18 +211,24 @@ def Component(request,year, month, day,mealtp):
        'DN': 'Dinner',
        'SN': 'Snack'}
 	context['mealText'] = mealTP_dict[mealtp]
-	context['mealDate'] = '%s-%s-%s' %(year,day,month)
+	context['mealDate'] = '%s-%s-%s' %(year,month,day)
 	context[ 'MealType'] = mealtp
 
-	context[ 'comp_list'] = Ingredient.objects.filter(numMeal__recordedDay__profile= request.user.userprofile, numMeal__recordedDay__Date= date( int(year),  int(month), int(day)   ),numMeal__mealNum=mealtp )			
+	context[ 'comp_list'] = Ingredient.objects.filter(numMeal__newDay__profile= request.user.userprofile, 
+		numMeal__newDay__Date= date( int(year),  int(month), int(day)   ),numMeal__mealNum=mealtp )			
 			
+
+
+	context[ 'current_meal'] = MealType.objects.get(newDay__profile= request.user.userprofile, 
+		newDay__Date= date( int(year),  int(month), int(day)   ),mealNum=mealtp )
+
 	if request.method == 'POST':
 		form = IngredientFRM(request.POST)
 
 		if form.is_valid():
 			
 			Component =  form.save(commit=False)   
-			Component.numMeal = MealType.objects.get(recordedDay__profile= request.user.userprofile, recordedDay__Date= date( int(year),  int(month), int(day),   ),mealNum=mealtp )			
+			Component.numMeal = MealType.objects.get(newDay__profile= request.user.userprofile, newDay__Date= date( int(year), int(month), int(day)     ),mealNum=mealtp )			
 			Component.save()
 
 			return HttpResponseRedirect('/counter/%s-%s-%s/%s/' %(year,month,day,mealtp))
