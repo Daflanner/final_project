@@ -161,9 +161,9 @@ def MealEntry(request,year, month, day):
 			try:
 				
 				meal = MealType.objects.get(newDay__profile= request.user.userprofile,
-				#Date = form.cleaned_data['Date'],
+				newDay__Date =date( int(year), int(month), int(day)),
 				mealNum =form.cleaned_data['mealNum'])
-				#Date = form.cleaned_data['Date'],
+				
 
 				print "try fully run" 
 
@@ -183,7 +183,7 @@ def MealEntry(request,year, month, day):
 			#Now that the recordedDays has been attatched to meal. The meal record is saved.
 				meal.save()
 
-			print "except completed"	
+				print "except completed"	
 
 			return HttpResponseRedirect('/counter/%s-%s-%s/%s/' %(year,month,day,meal.mealNum))
 
@@ -203,24 +203,35 @@ from django.contrib.auth.decorators import login_required
 @login_required
 
 
-def Component(request,year, month, day,mealtp):
+def Component(request,year, month, day,mealtp):#url parser grabs these parameters from the URL bar
 	context = RequestContext(request)
-	mealTP_dict= {
+	mealTP_dict= {   # tranlates the 2 letter code for a meal from the URL bar into the the full word for the meal 
        'BF':'Breakfast',
        'LN': 'Lunch',
        'DN': 'Dinner',
        'SN': 'Snack'}
-	context['mealText'] = mealTP_dict[mealtp]
-	context['mealDate'] = '%s-%s-%s' %(year,month,day)
-	context[ 'MealType'] = mealtp
+	context['mealText'] = mealTP_dict[mealtp] #creates meal text object for tmeplate
+	context['mealDate'] = '%s-%s-%s' %(year,month,day) #creates a meal date object for template
+	context[ 'MealType'] = mealtp #creates "MealType" object to be put in the URL
 
+
+			# .filter returns a list or nothing. While .get return one item or nothing
+
+			#   .objects is the object mananager and filter returns a list based on the queery parameters. 
+
+#  A__ B means roughly "Search A Where it is attatched to B"
 	context[ 'comp_list'] = Ingredient.objects.filter(numMeal__newDay__profile= request.user.userprofile, 
+										#search ingredient objects where the numMeal(fk)is points to the newDay(fk) that points to the profile(fk) 
+										#that matches the user profile of the request.
+										 
 		numMeal__newDay__Date= date( int(year),  int(month), int(day)   ),numMeal__mealNum=mealtp )			
 			
 
+			#searches through the models to get the right meal for the right day in the profile.
+			#projects it to the template.. 
+	context[ 'current_meal'] = MealType.objects.get(newDay__profile = request.user.userprofile, 
+		newDay__Date= date( int(year),  int(month), int(day) ), mealNum = mealtp )
 
-	context[ 'current_meal'] = MealType.objects.get(newDay__profile= request.user.userprofile, 
-		newDay__Date= date( int(year),  int(month), int(day)   ),mealNum=mealtp )
 
 	if request.method == 'POST':
 		form = IngredientFRM(request.POST)
@@ -228,7 +239,9 @@ def Component(request,year, month, day,mealtp):
 		if form.is_valid():
 			
 			Component =  form.save(commit=False)   
-			Component.numMeal = MealType.objects.get(newDay__profile= request.user.userprofile, newDay__Date= date( int(year), int(month), int(day)     ),mealNum=mealtp )			
+			Component.numMeal = MealType.objects.get(newDay__profile= request.user.userprofile, 
+			newDay__Date= date( int(year), int(month), int(day) ),mealNum=mealtp )			
+			
 			Component.save()
 
 			return HttpResponseRedirect('/counter/%s-%s-%s/%s/' %(year,month,day,mealtp))
@@ -237,12 +250,51 @@ def Component(request,year, month, day,mealtp):
 			print form.errors
 
 	else:
-
 		form = IngredientFRM()
 
 	return render_to_response('counter/Ingredients.html', {'form':form}, context)
 
 
 
+"""" Day_view Code """
 
+def Day_view(request, year, month, day ):
+	context = RequestContext(request)
+	
+#Pulling the Date out of the URL. Creating separate year, month and Day variables
+#So that they can be put in any order in the template
+	context['year'] = '%s' %(year,)	
+	context['month'] = '%s' %(month,)	
+	context['day'] = '%s' % (day,)	
+
+	
+# Creating empty list Day_food
+	day_food =[ ]
+
+#creating Meal_list using object filter sorting via foreign keys.
+	meal_list = MealType.objects.filter(newDay__profile = request.user.userprofile, 
+		newDay__Date= date( int(year),  int(month), int(day) ) )
+	
+#filling the empty day food list such that the meal title is the zeroeth element 
+		#of the list and the meal total is the 1st. 
+	for meal in meal_list:
+		day_food.append( [ meal.get_mealNum_display(), meal.Mealtotal()  ]	)
+					#.get_mealNum_display() translates 2 ltr code to word for meal
+		
+		comp_list =Ingredient.objects.filter(numMeal = meal)
+		
+
+		for comp in comp_list:
+			day_food[-1].append([comp.component, comp.comp_total()] )
+				#
+
+
+#Creating Day food and Meal_list variables to be called by template.
+	context['day_food'] = day_food
+	context['meal_list'] = meal_list
+	context['comp_list'] = comp_list
+
+
+	#return HttpResponseRedirect('/counter/%s-%s-%s/%s/' %(year,month,day)'/Day_view)'
+	return render_to_response('counter/Day_view.html', context)
 

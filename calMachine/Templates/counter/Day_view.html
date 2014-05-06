@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>counter</title>
+    </head>
+
+    <body>
+        <h1> Calories for Today {{month}}/{{day}}/{{year}} </h1>
+
+        <p>
+        {% if user.is_authenticated %}
+        <h3>  {{user.username}}       </h3>
+ <a href="/counter/logout/">Logout</a>
+
+
+       
+
+        {% for meal in day_food %}
+           <p> {{meal.0 }}  {{ meal.1}} </p>
+   
+        
+                {% with meal|slice:"2:" as c_list  %}
+                    {%  for comp in c_list  %}
+                       <p> {{comp.0}}  {{comp.1}} </P>
+                        {% endfor %} 
+                        {% endwith %}
+
+
+
+        {% endfor %}
+
+
+           
+
+
+         {% endif %}
+
+       
+  
+      
+    </body>
+
+</html>

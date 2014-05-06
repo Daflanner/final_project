@@ -7,7 +7,7 @@
     <body>
         <h1>Ingredients Page</h1>
 
-        <p> Please Enter each component of your meal; the calories for one unit of that, component and how many units of that component you ate. 
+        <p> Please Enter each component of your meal; the calories for one unit of that, component and how many units of that component you ate. </br>
 
             For example say you ate 2 eggs and 2 pieces of toast. You would enter Component: egg, Quantity: 2 Components calories: 50 (because 1 egg has 50 calories). the site will do the multiplication for you and present the calorie total for the eggs at the top of the screen. Then you can repeat with the bread.
 
@@ -22,10 +22,7 @@
         
         {% endfor%}
 
-
-        <p> meal total:{{current_meal.Mealtotal }}</p>
-
-        {% endif %}
+        {%endif%}
 
         <form action="/counter/{{mealDate}}/{{MealType}}/" method="post">
         	
@@ -43,7 +40,8 @@
 </form>
 
 <p> To enter a new day of meals click  <a href="/counter/Day_Record/">here</a> </br>
-    To enter another meal for the same day click <a href="/counter/{{mealDate}}/">here</a>  </P>
+    To enter another meal for the same day click <a href="/counter/{{mealDate}}/">here</a> </br>
+    To view what you have entered for to day click <a href="/counter/{{mealDate}}/Day_view/">here</a>  here  </P>
 
 
   

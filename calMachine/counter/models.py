@@ -37,12 +37,16 @@ class MealType (models.Model):
     mealTP_CHOICES= (
        ('BF','Breakfast'),
         ('LN', 'Lunch'),
+
+        
         ('DN', 'Dinner'),
         ('SN', 'Snack'))
         
     mealNum = models.CharField(max_length = 2, 
                                 choices = mealTP_CHOICES,
                                 default = 'BF',help_text ="Please enter what kind of meal you would like to record")
+
+
 
 
 

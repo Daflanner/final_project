@@ -15,6 +15,9 @@ urlpatterns = patterns('',
 	#url(r'^restricted/', views.restricted, name='restricted'),    
 
 	#url(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})/(?P<mealtp>)/$', 
-		#views.Component, name = 'Component'),      
+		#views.Component, name = 'Component'), 
+
+	url(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})/Day_view/$', 
+		views.Day_view, name = 'Day_view'  ),      
 
 )

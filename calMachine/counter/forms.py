@@ -3,6 +3,7 @@ from counter.models import UserProfile, RecordedDays, MealType, Ingredient
 from django.contrib.auth.models import User
 from django import forms
 
+
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
 
@@ -39,5 +40,14 @@ class IngredientFRM (forms.ModelForm):
 	class Meta:
 		model = Ingredient
 		fields = (  'component', 
-			'quantity','components_calories' )
+			'quantity','components_calories')
+
+
+"""class date_rangeFRM(forms.Form):
+
+	date_chose = forms.DateField
+	date_strt = forms.DateField
+	date_end = forms.DateField """
+
+
 		
