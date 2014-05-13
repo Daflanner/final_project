@@ -19,5 +19,7 @@ urlpatterns = patterns('',
 
 	url(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})/Day_view/$', 
 		views.Day_view, name = 'Day_view'  ),      
+	url(r'^Date_range/$', views.Date_range, name = 'Date_range'),
 
+	#url(r'^History_View/$', views.History_View, name = 'History_View')
 )

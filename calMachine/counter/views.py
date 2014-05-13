@@ -176,8 +176,6 @@ def MealEntry(request,year, month, day):
 						# get method searching RecordedDays class filtering via user profile and date ::: pulls current user profile from the request
 			# using date from datetime function to compare against the Date object  from the recordedDays class. 
 				meal.newDay = RecordedDays.objects.get(profile= request.user.userprofile, 
-					#Date = form.cleaned_data['Date'],
-				#mealtype =form.cleaned_data['mealtype'],
 				Date = date( int(year), int(month), int(day)  ) )
 			  
 			#Now that the recordedDays has been attatched to meal. The meal record is saved.
@@ -297,4 +295,65 @@ def Day_view(request, year, month, day ):
 
 	#return HttpResponseRedirect('/counter/%s-%s-%s/%s/' %(year,month,day)'/Day_view)'
 	return render_to_response('counter/Day_view.html', context)
+
+
+""" History view code """
+
+from counter.forms import date_rangeFRM
+from django.contrib.auth.decorators import login_required
+@login_required
+
+
+
+def Date_range(request):
+	context = RequestContext(request)
+
+	if request.method == 'POST':
+		form = date_rangeFRM(request.POST)
+		print "valid", form.is_valid()
+		print "form", str(form)
+		if form.is_valid():
+			#print "form", str(form)
+			date_chose = form.cleaned_data['date_chose']
+			date_strt = form.cleaned_data['date_strt']
+			date_end = form.cleaned_data['date_end']
+
+			print "date_chose", date_chose
+			if date_chose != "":
+				print "redirecting to Dav View:", '/counter/%02d-%02d-%02d/Day_view/' %(date_chose.year,date_chose.month,date_chose.day)
+				return HttpResponseRedirect('/counter/%02d-%02d-%02d/Day_view/' %(date_chose.year,date_chose.month,date_chose.day))
+				print "NEVER SEE THIS"
+
+
+
+			else:
+				print "Date Chose appears to be blank"
+				dt_range = []  
+
+				day_list = RecordedDays.objects.filter(profile= request.user.userprofile, 
+				date_strt__gte = date_strt, Date__lte = date_end     )
+
+				for day in day_list:
+					dt_range.append(day.date)
+
+					meal_list = MealType.objects.filter(
+					newDay__profile = request.user.userprofile, 
+					newDay__Date= date( int(year),  int(month), int(day) ) )
+
+					for meal in meal_list:
+						dt_range[-1].append([ meal.get_mealNum_display(), meal.Mealtotal()  ])
+						comp_list =Ingredient.objects.filter(numMeal = meal)
+        
+
+						for comp in comp_list:
+							dt_range[-1].append([comp.component, comp.comp_total()] )    
+
+		else: 
+			print "Form not valid:", str(form.errors)
+	else:
+		form = date_rangeFRM()
+		print "valid", form.is_valid()
+		print "form", str(form)
+
+	return render_to_response('counter/historyFRM.html', {'form':form}, context)
 

@@ -43,11 +43,11 @@ class IngredientFRM (forms.ModelForm):
 			'quantity','components_calories')
 
 
-"""class date_rangeFRM(forms.Form):
+class date_rangeFRM(forms.Form):
 
-	date_chose = forms.DateField
-	date_strt = forms.DateField
-	date_end = forms.DateField """
+	date_chose = forms.DateField(required=False)
+	date_strt = forms.DateField(required=False)
+	date_end = forms.DateField(required=False) 
 
 
 		
