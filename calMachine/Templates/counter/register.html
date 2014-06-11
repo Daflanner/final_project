@@ -1,17 +1,19 @@
 <!DOCTYPE html>
+{% load static%}
 <html>
     <head>
         <title>counter</title>
     </head>
 
-    <body>
+    <body style = "background-color:#FF9933
+ ">
         <h1>Register With Hit The Mark</h1>
 
         {% if registered %}
-        Rango says: <strong>thank you for registering!</strong>
+           <strong>Thank You For Registering!</strong>
         <a href="/counter/">Return to the homepage.</a><br />
         {% else %}
-         <strong>register here!</strong><br />
+        
 
         <form id="user_form" method="post" action="/counter/register/"
                 enctype="multipart/form-data">
@@ -28,5 +30,8 @@
             <input type="submit" name="submit" value="Register" />
         </form>
         {% endif %}
+
+
+        <img src="{% static "thumbsup.jpg" %}" alt= "pic of autobot rockNout">
     </body>
 </html>

@@ -1,15 +1,20 @@
 <!DOCTYPE html>
+{% load static%}
+
+
 <html>
     <head>
         <title>counter</title>
     </head>
 
-    <body>
+    <body style = "background-color: #66FF66">
         <h1>Ingredients Page</h1>
 
         <p> Please Enter each component of your meal; the calories for one unit of that, component and how many units of that component you ate. </br>
 
             For example say you ate 2 eggs and 2 pieces of toast. You would enter Component: egg, Quantity: 2 Components calories: 50 (because 1 egg has 50 calories). the site will do the multiplication for you and present the calorie total for the eggs at the top of the screen. Then you can repeat with the bread.
+
+                Unsure of how many calories are in your food. visit  <a href="http://www.calorieking.com/foods/"> Here </a>
 
 
         {% if user.is_authenticated %}
@@ -41,10 +46,10 @@
 
 <p> To enter a new day of meals click  <a href="/counter/Day_Record/">here</a> </br>
     To enter another meal for the same day click <a href="/counter/{{mealDate}}/">here</a> </br>
-    To view what you have entered for to day click <a href="/counter/{{mealDate}}/Day_view/">here</a>  here  </P>
+    To view what you have entered for today click <a href="/counter/{{mealDate}}/Day_view/">here</a>    </P>
 
 
-  
+  <img src="{% static "vegheart.jpg" %}" alt= "pic of autobot rockNout"
       
     </body>
 

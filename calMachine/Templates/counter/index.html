@@ -1,39 +1,44 @@
 <!DOCTYPE html>
+
+{% load static%}
+
 <html>
 
     <head>
         <title>counter</title>
     </head>
 
-    <body>
+
+
+    <body style = "background-color:#00CCFF;
+    text-color:white">
+ 
+
+    <div style = "background-color: ">
         <h1>Welcome To Hit The Mark!!</h1>
-        The Calorie Counter That Rocks !!
+        The Calorie Counter That Rocks !! <div>
 
 
         {% if user.is_authenticated %}
         
-        <h3>  {{user.username}}       </h3>
-        <a href="/counter/Day_Record/ ">  Enter a date</a></br>
-        <a href="/counter/logout/">Logout</a>
+        <h3> Hi  {{user.username}}    !   </h3></br>
+        <h3> Get Started Tracking Your Calories 
+        <h3><a href="/counter/Day_Record/ "> Record a Date </a> </h3></br>
+        <a href="/counter/logout/">Logout</a></br>
          
-        
-
-         <strong>{{ boldmessage }}</strong><br />
-        <a href="/counter/about/">About</a><br />
-
-
-
-                     
+                          
 
 
             {% else %}
         <p>  If you're ready to start....  </p>
         <a href="/counter/register/">Register Here</a> 
 
-        <p> If you already have an account go ahead and login </p>
-        <a href="/counter/login/">Login</a>
+        <p> If you already have an account go ahead and  
+        <a href="/counter/login/">Login</a> </br></p>
 
             {% endif %}
+
+             <img src="{% static "RockNout.jpg" %}" alt= "pic of autobot rockNout"
     </body>
  
 </html>

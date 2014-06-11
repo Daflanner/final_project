@@ -25,6 +25,7 @@ class RecordedDaysFRM(forms.ModelForm):
 class MealTypeFRM (forms.ModelForm):
 	
 	class Meta:
+
 		model = MealType
 		fields = ('mealNum',)
 
@@ -43,11 +44,14 @@ class IngredientFRM (forms.ModelForm):
 			'quantity','components_calories')
 
 
-class date_rangeFRM(forms.Form):
+#class Single_dateFRM(forms.Form):
 
-	date_chose = forms.DateField(required=False)
-	date_strt = forms.DateField(required=False)
-	date_end = forms.DateField(required=False) 
+	
+
+class Date_rangeFRM(forms.Form):
+	Single_date = forms.DateField(required=False)
+	Date_start = forms.DateField(required=False)
+	Date_end = forms.DateField(required=False) 
 
 
 		

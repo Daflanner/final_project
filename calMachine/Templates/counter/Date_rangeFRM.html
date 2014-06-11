@@ -1,11 +1,15 @@
 <!DOCTYPE html>
+{%load static%}
+
 <html>
     <head>
         <title>counter</title>
     </head>
 
-    <body>
-        <h1>Review The Days you've entered </h1>
+    <body style = "background-color:#CC99FF">
+        <h1>Review The Days You've Entered </h1>
+
+        
 
         {% if user.is_authenticated %}
         <h3>  {{user.username}}       </h3>
@@ -23,7 +27,7 @@
 <p><input type="submit" value="Submit" /></p>
 
 </form>
-
+<img src="{% static "reader.jpg" %}" alt= "pic of autobot rockNout"
         
     </body>
 

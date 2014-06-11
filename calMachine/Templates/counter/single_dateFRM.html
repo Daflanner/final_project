@@ -5,14 +5,14 @@
     </head>
 
     <body>
-        <h1>Review The Days you've entered </h1>
+        <h1>Enter a Single Day that you've entered </h1>
 
         {% if user.is_authenticated %}
         <h3>  {{user.username}}       </h3>
         <a href="/counter/logout/">Logout</a>
         {% endif %}
 
-        <form action="/counter/date_range/" method="post">
+        <form action="/counter/Date_range/" method="post">
 
             {% csrf_token %}
             

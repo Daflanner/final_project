@@ -62,7 +62,6 @@ class MealType (models.Model):
         return mlTotal
 
 
-
 class Ingredient (models.Model):
     numMeal = models.ForeignKey(MealType, unique = False)
     component = models.CharField(max_length = 40, unique = False)

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+{% load static%}
+
 <html>
     <head>
         <title>counter</title>
     </head>
 
-    <body>
+    <body style= "background-color:#FFFFCC">
         <h1>Record a Day of Calories</h1>
 
         {% if user.is_authenticated %}
@@ -14,6 +16,7 @@
 
         <form action="/counter/Day_Record/" method="post">
 
+            
             {% csrf_token %}
             
             {{form.as_p}}
@@ -22,8 +25,10 @@
 
 <p><input type="submit" value="Submit" /></p>
 
-</form>
+<p>   If you would like to view a day of meals and calories you previously entered. Please click <a href = " /counter/date_range/"> Here</a> </p>
 
+</form>
+ <img src="{% static "hand to paper.jpg" %}" alt= "pic of autobot rockNout"
         
     </body>
 

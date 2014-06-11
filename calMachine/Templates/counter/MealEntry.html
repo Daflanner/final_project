@@ -1,16 +1,21 @@
 <!DOCTYPE html>
+{% load static%}
+
 <html>
     <head>
         <title>counter</title>
     </head>
 
-    <body>
-        <h1>Which Meal or Snack Are You Recording ?</h1>
-
+    <body style = "background-color: #FFCCCC">
+        <table><tr>
+      <td>  <h1>Which Meal or Snack Are You Recording ?</h1><td>
+<td>
         {% if user.is_authenticated %}
         <h3>  {{user.username}}       </h3>
-        {% endif %}
+        {% endif %} </td>
 
+        </tr>
+            <table>
 
             {# method posts mealtype with the recorded date extracted from created URL tol match to url stored in Urls file.  #}
         <form action="/counter/{{recorddate}}/" method="post">
@@ -26,7 +31,7 @@
 
 </form>
 
-        
+        <img src="{% static "bfld.jpg" %}" alt= "pic of autobot rockNout">
     </body>
 
 </html>

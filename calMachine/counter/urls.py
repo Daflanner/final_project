@@ -12,14 +12,11 @@ urlpatterns = patterns('',
 		views.MealEntry, name = 'MealEntry'  ), 
 	url(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})/(?P<mealtp>[A-Z]{2})/$', 
 		views.Component, name = 'Component'), 
-	#url(r'^restricted/', views.restricted, name='restricted'),    
-
-	#url(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})/(?P<mealtp>)/$', 
-		#views.Component, name = 'Component'), 
-
+	
+	#url(r'^Single_date/$', views.single_date, name = 'single_date'),
 	url(r'^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})/Day_view/$', 
 		views.Day_view, name = 'Day_view'  ),      
-	url(r'^Date_range/$', views.Date_range, name = 'Date_range'),
+	url(r'^date_range/$', views.date_range, name = 'date_range'),
 
-	#url(r'^History_View/$', views.History_View, name = 'History_View')
+	url(r'^History_View/$', 'direct_to_template', {'template': 'history_view.html'})
 )

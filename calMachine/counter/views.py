@@ -15,9 +15,6 @@ from .models import RecordedDays,MealType,Ingredient
 def index(request):
 	context =RequestContext(request)
 
-
-
-
 	context_dict = {'boldmessage': " "}
 	return render_to_response('counter/index.html', context_dict, context)
 
@@ -265,7 +262,6 @@ def Day_view(request, year, month, day ):
 	context['month'] = '%s' %(month,)	
 	context['day'] = '%s' % (day,)	
 
-	
 # Creating empty list Day_food
 	day_food =[ ]
 
@@ -286,7 +282,6 @@ def Day_view(request, year, month, day ):
 			day_food[-1].append([comp.component, comp.comp_total()] )
 				#
 
-
 #Creating Day food and Meal_list variables to be called by template.
 	context['day_food'] = day_food
 	context['meal_list'] = meal_list
@@ -299,61 +294,94 @@ def Day_view(request, year, month, day ):
 
 """ History view code """
 
-from counter.forms import date_rangeFRM
+from counter.forms import Date_rangeFRM
 from django.contrib.auth.decorators import login_required
 @login_required
 
-
-
-def Date_range(request):
+def date_range(request):
 	context = RequestContext(request)
-
+	
 	if request.method == 'POST':
-		form = date_rangeFRM(request.POST)
+		form = Date_rangeFRM(request.POST)
 		print "valid", form.is_valid()
 		print "form", str(form)
 		if form.is_valid():
-			#print "form", str(form)
-			date_chose = form.cleaned_data['date_chose']
-			date_strt = form.cleaned_data['date_strt']
-			date_end = form.cleaned_data['date_end']
+			
 
-			print "date_chose", date_chose
-			if date_chose != "":
-				print "redirecting to Dav View:", '/counter/%02d-%02d-%02d/Day_view/' %(date_chose.year,date_chose.month,date_chose.day)
-				return HttpResponseRedirect('/counter/%02d-%02d-%02d/Day_view/' %(date_chose.year,date_chose.month,date_chose.day))
-				print "NEVER SEE THIS"
+			Single_date = form.cleaned_data['Single_date']
+				#print "form", str(form)
+					
+	
+			if Single_date and Single_date  != "":
 
+				try: 
+					print "try started "
+					record = RecordedDays.objects.get(
+					profile= request.user.userprofile, 
+					Date = form.cleaned_data['Single_date'])
+					print "try executed"
+					return HttpResponseRedirect('/counter/%02d-%02d-%02d/Day_view/' %(Single_date.year,Single_date.month,Single_date.day))
+				
 
+				except:
+					return HttpResponse("Sorry but you have no data for that date. Please click the back button and enter a different date.")
+					print form.errors
+					print "except executed"
 
 			else:
-				print "Date Chose appears to be blank"
+				            
+				Date_start = form.cleaned_data['Date_start']
+				Date_end = form.cleaned_data['Date_end']
 				dt_range = []  
 
 				day_list = RecordedDays.objects.filter(profile= request.user.userprofile, 
-				date_strt__gte = date_strt, Date__lte = date_end     )
+    			Date__gte = Date_start, Date__lte = Date_end     )
 
-				for day in day_list:
-					dt_range.append(day.date)
+    			for day in day_list:
+					dt_range.append(day.Date)
 
 					meal_list = MealType.objects.filter(
 					newDay__profile = request.user.userprofile, 
-					newDay__Date= date( int(year),  int(month), int(day) ) )
+					newDay__Date__gte = Date_start, newDay__Date__lte = Date_end     )
+                    #newDay__Date= date( int(year),  int(month), int(day) ) )
 
 					for meal in meal_list:
-						dt_range[-1].append([ meal.get_mealNum_display(), meal.Mealtotal()  ])
+						dt_range.append([ meal.get_mealNum_display(), meal.Mealtotal()  ])
 						comp_list =Ingredient.objects.filter(numMeal = meal)
-        
 
 						for comp in comp_list:
-							dt_range[-1].append([comp.component, comp.comp_total()] )    
+							dt_range[-1].append([comp.component, comp.comp_total()] ) 
+
+
+
+					context['meal_list'] = meal_list
+					context['comp_list'] = comp_list
+					context['day_list']  = day_list 
+
+			return HttpResponseRedirect('/counter/History_View' (context))
+			#return render_to_response( 'history_view.html', context ) 
 
 		else: 
-			print "Form not valid:", str(form.errors)
-	else:
-		form = date_rangeFRM()
-		print "valid", form.is_valid()
-		print "form", str(form)
+			print form.errors
 
-	return render_to_response('counter/historyFRM.html', {'form':form}, context)
+	else:
+		form = Date_rangeFRM()  
+
+	return render_to_response('counter/Date_rangeFRM.html', {'form':form}, context)
+
+
+
+    
+
+
+
+	
+		
+	
+
+	
+
+
+
+
 
