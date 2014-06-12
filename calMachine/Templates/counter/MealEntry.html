@@ -7,20 +7,24 @@
     </head>
 
     <body style = "background-color: #FFCCCC">
-        <table><tr>
-      <td>  <h1>Which Meal or Snack Are You Recording ?</h1><td>
-<td>
+        
+        <h1>Which Meal or Snack Are You Recording ?</h1>
+
+
         {% if user.is_authenticated %}
         <h3>  {{user.username}}       </h3>
-        {% endif %} </td>
+        {% endif %} 
 
-        </tr>
-            <table>
+        
+            
 
             {# method posts mealtype with the recorded date extracted from created URL tol match to url stored in Urls file.  #}
         <form action="/counter/{{recorddate}}/" method="post">
         	<a href="/counter/logout/">Logout</a>
 
+                </td>
+        </tr>
+    </table>
             {% csrf_token %}
             
             {{form.as_p}}

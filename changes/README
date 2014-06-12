@@ -1,0 +1,4 @@
+ ../final_project/calMachine/counter/models.py 
+ ../final_project/calMachine/counter/views.py 
+ ../final_project/calMachine/calMachine/settings.py 
+ ../final_project/calMachine/Templates/counter/history_view.html 

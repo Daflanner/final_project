@@ -4,13 +4,14 @@
         <title>counter</title>
     </head>
 
-    <body>
+    <body style = "background-color:#00FFCC">
         <h1> Calories for Today {{month}}/{{day}}/{{year}} </h1>
 
         <p>
         {% if user.is_authenticated %}
         <h3>  {{user.username}}       </h3>
- <a href="/counter/logout/">Logout</a>
+ <a href="/counter/logout/">Logout</a></br>
+ To go back to the start page click <a href ="/counter/ ">Here</a>
 
 
        
